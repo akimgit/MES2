@@ -44,7 +44,7 @@
           #power_off indiqué sur le site plus valide remplacé par poweredoff
           state: poweredoff
           template: DebTemplate
-          #message d'erreur pas de data center par defaut du coup precision du datacenter
+          #message d'erreur pas le bon nom  data center par defaut du coup precision du datacenter
           datacenter: Datacenter
 
 
@@ -61,3 +61,16 @@
             state: add
         delegate_to: localhost
               
+
+      - name: Modifier l'attribut personnalisé DateCreation avec la date du jour (celle du jour de l'exécution du playbook).
+        community.vmware.vmware_guest_custom_attributes:
+           hostname: "{{ vcenter_hostname }}"
+           username: "{{ vcenter_username }}"
+           password: "{{ vcenter_password }}"
+           validate_certs: no
+           name: Deb-akim
+           state: present
+           attributes:
+            - name: DateCreation
+           #J'ai voulu melanger du shell pour lancer la date lors du lancement du script mais je n'y suis pas arriver du coup je me suis resigner à l'assigner manuellement"
+              value: '08/07/2021'

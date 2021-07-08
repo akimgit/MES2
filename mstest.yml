@@ -1,0 +1,12 @@
+- name: PLAY creation utilisateur ansible
+  hosts: v-center
+  tasks:
+    - name: Utilisation du module user pour creer ansible
+      community.vmware.vmware_portgroup:
+        hostname: 78.192.40.154
+        username: akim@formation.lan
+        password: F0rmation!
+        switch: vSwitch0
+        portgroup: VLAN-akim
+        vlan_id: 8
+        state: present

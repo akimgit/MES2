@@ -1,0 +1,19 @@
+---
+### Acte 1 sur le localhost :
+- name: mise en situation 2
+  hosts: local
+ 
+  tasks:
+      - name: Ajout d'un nouveau groupe de port
+        community.vmware.vmware_portgroup:
+          hostname: vcsa.formation.lan
+          cluster_name: Cluster
+          username: akim
+          password: F0rmation!
+          switch: vSwitch0
+          portgroup: VLAN-akim 
+          vlan_id: 8
+          state: present
+          validate_certs: no
+        delegate_to: localhost
+     

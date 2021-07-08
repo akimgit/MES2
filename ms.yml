@@ -20,7 +20,7 @@
 
 
 
-
+#perdu la journée parce que les prerequis n'ont pas était fourni pip...
       - name: Ajouter un Tag dans la catégorie Proprio avec votre prénom.
         vmware_tag:
           hostname: '{{ vcenter_hostname }}'
@@ -46,5 +46,18 @@
           template: DebTemplate
           #message d'erreur pas de data center par defaut du coup precision du datacenter
           datacenter: Datacenter
-    
-      
+
+
+      - name: Tagguer la VM avec votre tag
+        vmware_tag_manager:
+            hostname: '{{ vcenter_hostname }}'
+            username: '{{ vcenter_username }}'
+            password: '{{ vcenter_password }}'
+            validate_certs: no
+            tag_names:
+              - akim
+            object_name: Deb-akim
+            object_type: VirtualMachine
+            state: add
+        delegate_to: localhost
+              

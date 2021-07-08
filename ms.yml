@@ -60,7 +60,14 @@
             object_type: VirtualMachine
             state: add
         delegate_to: localhost
-              
+     #permet d'executer la commande shell pour afficher la date       
+      - name: Get timestamp from the system
+        shell: "date +%Y-%m-%d"
+        register: tstamp
+#recuperation du stdout (resultat de la commande) dans cur_date
+      - name: Set variables
+        set_fact:
+          cur_date: "{{ tstamp.stdout}}"
 
       - name: Modifier l'attribut personnalisé DateCreation avec la date du jour (celle du jour de l'exécution du playbook).
         community.vmware.vmware_guest_custom_attributes:
@@ -72,5 +79,4 @@
            state: present
            attributes:
             - name: DateCreation
-           #J'ai voulu melanger du shell pour lancer la date lors du lancement du script mais je n'y suis pas arriver du coup je me suis resigner à l'assigner manuellement"
-              value: '08/07/2021'
+              value: "{{ cur_date }}"

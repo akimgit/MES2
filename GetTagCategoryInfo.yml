@@ -1,0 +1,12 @@
+- name: mise en situation 2
+  hosts: local
+ #Ping de la machine 
+  tasks:
+      - name: Recuperer les informations sur les catégories de tag
+        community.vmware.vmware_category_facts:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          validate_certs: no
+        delegate_to: localhost
+        register: all_tag_category_facts

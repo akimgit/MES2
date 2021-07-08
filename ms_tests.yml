@@ -29,22 +29,4 @@
           tag_name: akim
           validate_certs: no
           state: present
-          #Obtenu via le playbook GetTagCategoryinfo.yml avec -vvv
-          category_id: "urn:vmomi:InventoryServiceCategory:ae1957ef-839b-468c-ac6a-df722535aeb1:GLOBAL"
-
-      - name: Créer une VM Debian 10 à partir du template fourni 'DebTemplate'(login/mdp:root/root et dawan/dawan)
-        vmware_guest:
-          cluster: Cluster
-          hostname: "{{ vcenter_hostname }}"
-          username: "{{ vcenter_username }}"
-          password: "{{ vcenter_password }}"
-          validate_certs: False
-          folder: /vm
-          name: Deb-akim
-          #power_off indiqué sur le site plus valide remplacé par poweredoff
-          state: poweredoff
-          template: DebTemplate
-          #message d'erreur pas de data center par defaut du coup precision du datacenter
-          datacenter: Datacenter
-    
       

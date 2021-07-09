@@ -61,10 +61,11 @@
             state: add
         delegate_to: localhost
      #permet d'executer la commande shell pour afficher la date       
-      - name: Get timestamp from the system
+      - name: Recuperer la date et la variabiliser en tstamp
         shell: "date +%Y-%m-%d"
         register: tstamp
-#recuperation du stdout (resultat de la commande) dans cur_date
+#recuperation du stdout (resultat de la commande) dans cur_date variable contenant la date
+
       - name: Set variables
         set_fact:
           cur_date: "{{ tstamp.stdout}}"
@@ -80,3 +81,47 @@
            attributes:
             - name: DateCreation
               value: "{{ cur_date }}"
+
+      - name: Modifier la version de la debian pour debian 10 
+        community.vmware.vmware_guest:
+           hostname: "{{ vcenter_hostname }}"
+           username: "{{ vcenter_username }}"
+           password: "{{ vcenter_password }}"
+           validate_certs: no
+           name: Deb-akim
+           state: present
+           guest_id: debian10_64Guest
+      - name: Ajouter interface une interface réseau de type VMxNet3 sur le groupe port précédemment créé
+        vmware_guest_network:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          datacenter: "{{ datacenter_name }}"
+          cluster: Cluster
+          gather_network_info: false
+          name: Deb-akim
+          validate_certs: no
+          networks: 
+            - device_type: vmxnet3
+              name: VLAN-akim
+              state: present
+      - name: Redimensionner le disque à 5G.
+        vmware_guest:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          name: Deb-akim
+          validate_certs: no
+          state: present
+          disk:
+          - size_gb: 5
+      - name: Allumer la VM
+        vmware_guest:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          validate_certs: False
+          folder: /vm
+          name: Deb-akim
+          #power_on indiqué sur le site plus valide remplacé par poweredon
+          state: poweredon

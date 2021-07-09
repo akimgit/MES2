@@ -1,0 +1,18 @@
+  - name: mise en situation 2
+    hosts: local 
+    tasks:
+   
+      - name: Ajouter interface une interface réseau de type VMxNet3 sur le groupe port précédemment créé
+        vmware_guest_network:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          datacenter: "{{ datacenter_name }}"
+          cluster: Cluster
+          gather_network_info: false
+          name: Deb-akim
+          validate_certs: no
+          networks: 
+            - device_type: vmxnet3
+              name: VLAN-akim
+              state: new

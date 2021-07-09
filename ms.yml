@@ -125,3 +125,40 @@
           name: Deb-akim
           #power_on indiqué sur le site plus valide remplacé par poweredon
           state: poweredon
+          wait_for_ip_address: yes
+        register: infovm
+      - name: Récupérer l'ip de la VM dans un fait Ansible(fact)    
+        set_fact:
+          vm_ip: "{{ infovm.instance.ipv4 }}"
+      - name: affichage de l'ip
+        ansible.builtin.debug:
+          msg: l'ip de la vm est {{ vm_ip }}
+      - name: ajout hote    
+        ansible.builtin.add_host:
+          name: Debian
+          ansible_host: "{{ vm_ip }}"
+          ansible_user: dawan
+          ansible_password: dawan
+          state: present
+      
+- name: acte2
+  hosts: Debian
+  tasks:
+      - name: Copier votre clé ssh créée précédemment sur la VM
+        ansible.posix.authorized_key:
+          user: dawan
+          key: "{{ lookup('file', '/home/akim/.ssh/id_rsa.pub') }}"
+
+- name: acte.3
+  hosts: local
+  tasks:
+      - name: Create a snapshot
+        vmware_guest_snapshot:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          datacenter: "{{ datacenter_name }}"
+          folder: /
+          name: Deb-akim
+          snapshot_name: snap1
+          validate_certs: no
